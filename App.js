@@ -1,22 +1,25 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { Text, View, StatusBar } from 'react-native'
+import * as Font from 'expo-font'
+import { AppLoading } from 'expo'
+import { Ionicons } from '@expo/vector-icons'
 
 const App = _ => {
-  const { container } = styles
-  return (
-    <View style={container}>
-      <Text>Open up App.js Tos</Text>
-    </View>
+  const [loaded, setLoaded] = useState(false)
+  const loadAssets = async _ => await Font.loadAsync({ ...Ionicons.font })
+  return loaded ? (
+    <>
+      <StatusBar barStyle="light-content" />
+      <View>
+        <Text>Welcome!</Text>
+      </View>
+    </>
+  ) : (
+    <AppLoading
+      startAsync={loadAssets}
+      onFinish={setLoaded(true)}
+      onError={console.warn}
+    />
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
-
 export default App
