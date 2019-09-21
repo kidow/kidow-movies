@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Text, View, StatusBar } from 'react-native'
+import { StatusBar } from 'react-native'
 import * as Font from 'expo-font'
 import { AppLoading } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
+import { MainNavigation } from 'navigations'
 
 const App = _ => {
   const [loaded, setLoaded] = useState(false)
@@ -10,9 +11,7 @@ const App = _ => {
   return loaded ? (
     <>
       <StatusBar barStyle="light-content" />
-      <View>
-        <Text>Welcome!</Text>
-      </View>
+      <MainNavigation />
     </>
   ) : (
     <AppLoading
