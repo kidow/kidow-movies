@@ -4,7 +4,7 @@ import { createAppContainer } from 'react-navigation'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
 import { TabBarIcon } from 'components'
-import { MovieScreen } from 'screens'
+import { MovieScreen, TVScreen, SearchScreen } from 'screens'
 
 const createStack = (screen, title) =>
   createStackNavigator({
@@ -36,6 +36,28 @@ const TabNavigation = createBottomTabNavigator(
           />
         )
       }
+    },
+    TV: {
+      screen: createStack(TVScreen, 'TV'),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <TabBarIcon
+            focused={focused}
+            name={Platform.OS === 'ios' ? 'ios-tv' : 'md-tv'}
+          />
+        )
+      }
+    },
+    Search: {
+      screen: createStack(SearchScreen, 'Search'),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <TabBarIcon
+            focused={focused}
+            name={Platform.OS === 'ios' ? 'ios-search' : 'md-search'}
+          />
+        )
+      }
     }
   },
   {
@@ -44,7 +66,8 @@ const TabNavigation = createBottomTabNavigator(
         backgroundColor: 'black',
         borderTopColor: 'black',
         color: 'white'
-      }
+      },
+      activeTintColor: 'white'
     }
   }
 )
