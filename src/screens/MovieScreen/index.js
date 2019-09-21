@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Loader } from 'components'
 import styled from 'styled-components'
 import Swiper from 'react-native-swiper'
-import { Dimensions, TouchableWithoutFeedback } from 'react-native'
+import { Dimensions, TouchableWithoutFeedback, StyleSheet } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import axios from 'axios'
 
@@ -170,7 +170,7 @@ class MovieScreen extends Component {
             autoplayTimeout={3}
           >
             {nowPlaying
-              .filter(({ backdrop_path }) => backdrop_path !== null)
+              .filter(({ backdrop_path }) => backdrop_path)
               .map(
                 ({
                   id,
