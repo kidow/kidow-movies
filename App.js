@@ -7,7 +7,7 @@ import { MainNavigation } from 'navigations'
 
 const App = _ => {
   const [loaded, setLoaded] = useState(false)
-  const loadAssets = async _ => await Font.loadAsync({ ...Ionicons.font })
+  const loadAssets = async _ => await Font.loadAsync({ ...Ionicons.fdont })
   return loaded ? (
     <>
       <StatusBar barStyle="light-content" />
