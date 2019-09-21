@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Loader } from 'components'
 import styled from 'styled-components'
 import Swiper from 'react-native-swiper'
-import { Dimensions } from 'react-native'
+import { Dimensions, TouchableWithoutFeedback } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import axios from 'axios'
 
@@ -80,6 +80,48 @@ const Rating = styled.Text`
   font-weight: 600;
 `
 
+const SectionContainer = styled.View`
+  margin-vertical: 20px;
+`
+
+const SectionTitle = styled.Text`
+  color: white;
+  font-weight: 600;
+  padding-left: 20px;
+  margin-bottom: 15px;
+`
+
+const SectionScrollView = styled.ScrollView`
+  padding-left: 20px;
+`
+
+const ItemContainer = styled.View`
+  align-items: center;
+  margin-right: 20px;
+`
+
+const ItemTitle = styled.Text`
+  color: white;
+  font-size: ${({ big }) => (big ? '14px' : '12px')};
+  margin-vertical: 5px;
+`
+
+const HContainer = styled.View`
+  margin-bottom: 20px;
+  flex-direction: row;
+`
+
+const ItemColumn = styled.View`
+  margin-left: 20px;
+  width: 60%;
+`
+
+const ItemOverview = styled.Text`
+  color: #bdc3c7;
+  font-size: 12px;
+  margin-vertical: 10px;
+`
+
 class MovieScreen extends Component {
   state = {
     loading: false,
@@ -115,6 +157,7 @@ class MovieScreen extends Component {
     `https://image.tmdb.org/t/p/${size}${path}`
   render() {
     const { loading, upcoming, popular, nowPlaying } = this.state
+    const { navigation } = this.props
     return loading ? (
       <Loader />
     ) : (
@@ -150,7 +193,7 @@ class MovieScreen extends Component {
                           <Title>{title}</Title>
                           {vote_average && (
                             <VoteContainer>
-                              <Rating>{`${vote_average} / 10`}</Rating>
+                              <Rating>⭐️ {`${vote_average} / 10`}</Rating>
                             </VoteContainer>
                           )}
                           {overview && (
@@ -185,6 +228,99 @@ class MovieScreen extends Component {
                 )
               )}
           </Swiper>
+        )}
+        {upcoming && (
+          <SectionContainer>
+            <SectionTitle>Upcoming Movies</SectionTitle>
+            <SectionScrollView horizontal>
+              {upcoming
+                .filter(movie => movie.poster_path)
+                .map(({ id, poster_path, title, vote_average }) => (
+                  <TouchableWithoutFeedback
+                    onPress={_ =>
+                      navigation.navigate({
+                        routeName: 'Detail',
+                        params: {
+                          isMovie: true,
+                          id,
+                          poster_path,
+                          backdrop_path: null,
+                          title,
+                          vote_average
+                        }
+                      })
+                    }
+                    key={id}
+                  >
+                    <ItemContainer>
+                      <PosterImage
+                        source={{ uri: this.makePhotoUrl(poster_path) }}
+                      />
+                      <ItemTitle>
+                        {title.length > 15
+                          ? `${title.substring(0, 12)}...`
+                          : title}
+                      </ItemTitle>
+                      <Rating>⭐️ {`${vote_average} / 10`}</Rating>
+                    </ItemContainer>
+                  </TouchableWithoutFeedback>
+                ))}
+            </SectionScrollView>
+          </SectionContainer>
+        )}
+        {popular && (
+          <SectionContainer>
+            <SectionTitle>Popular Movies</SectionTitle>
+            <SectionScrollView horizontal={false}>
+              {popular
+                .filter(movie => movie.poster_path)
+                .map(
+                  ({
+                    id,
+                    poster_path,
+                    title,
+                    vote_average,
+                    backdrop_path,
+                    overview
+                  }) => (
+                    <TouchableWithoutFeedback
+                      onPress={_ =>
+                        navigation.navigate({
+                          routeName: 'Detail',
+                          params: {
+                            isMovie: true,
+                            id,
+                            poster_path,
+                            backdrop_path,
+                            title,
+                            vote_average,
+                            overview
+                          }
+                        })
+                      }
+                      key={id}
+                    >
+                      <HContainer>
+                        <PosterImage
+                          source={{ uri: this.makePhotoUrl(poster_path) }}
+                        />
+                        <ItemColumn>
+                          <ItemTitle big>{title}</ItemTitle>
+                          <Rating>⭐️ {`${vote_average} / 10`}</Rating>
+                          {overview && (
+                            <ItemOverview>
+                              {overview.length > 150
+                                ? `${overview.substring(0, 147)}...`
+                                : overview}
+                            </ItemOverview>
+                          )}
+                        </ItemColumn>
+                      </HContainer>
+                    </TouchableWithoutFeedback>
+                  )
+                )}
+            </SectionScrollView>
+          </SectionContainer>
         )}
       </Container>
     )
