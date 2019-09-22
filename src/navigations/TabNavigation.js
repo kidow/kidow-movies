@@ -26,8 +26,8 @@ const createStack = (screen, title) =>
 
 const TabNavigation = createBottomTabNavigator(
   {
-    Movie: {
-      screen: createStack(MovieScreen, 'Movie'),
+    영화: {
+      screen: createStack(MovieScreen, '영화'),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <TabBarIcon
@@ -37,8 +37,8 @@ const TabNavigation = createBottomTabNavigator(
         )
       }
     },
-    TV: {
-      screen: createStack(TVScreen, 'TV'),
+    드라마: {
+      screen: createStack(TVScreen, '드라마'),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <TabBarIcon
@@ -48,8 +48,8 @@ const TabNavigation = createBottomTabNavigator(
         )
       }
     },
-    Search: {
-      screen: createStack(SearchScreen, 'Search'),
+    검색: {
+      screen: createStack(SearchScreen, '검색'),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <TabBarIcon

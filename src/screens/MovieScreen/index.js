@@ -1,126 +1,20 @@
 import React, { Component } from 'react'
 import { Loader } from 'components'
-import styled from 'styled-components'
 import Swiper from 'react-native-swiper'
-import { Dimensions, TouchableWithoutFeedback, StyleSheet } from 'react-native'
+import {
+  Dimensions,
+  TouchableWithoutFeedback,
+  ScrollView,
+  View,
+  Image,
+  Text,
+  TouchableOpacity
+} from 'react-native'
 import { withNavigation } from 'react-navigation'
+import { Poster, Rating } from 'components'
 import axios from 'axios'
 
 const { width, height } = Dimensions.get('screen')
-
-const Container = styled.ScrollView`
-  background-color: black;
-`
-
-const View = styled.View`
-  height: ${height / 3};
-`
-
-const SlideContainer = styled.View`
-  flex: 1;
-  position: relative;
-`
-
-const BgImage = styled.Image`
-  width: ${width};
-  height: ${height / 3};
-  opacity: 0.3;
-  position: absolute;
-`
-
-const Content = styled.View`
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  padding-horizontal: 30px;
-  justify-content: space-between;
-`
-
-const Column = styled.View`
-  width: 60%;
-  align-items: flex-start;
-`
-
-const Title = styled.Text`
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-`
-
-const Overview = styled.Text`
-  color: white;
-  font-size: 12px;
-  margin-bottom: 10px;
-`
-
-const VoteContainer = styled.View`
-  margin: 10px 0px;
-`
-
-const BtnContainer = styled.TouchableOpacity`
-  background-color: #e74c3c;
-  border-radius: 5px;
-  padding: 8px;
-`
-
-const BtnText = styled.Text`
-  color: white;
-  font-size: 12px;
-`
-
-const PosterImage = styled.Image`
-  width: 110px;
-  height: 160px;
-  border-radius: 2.5px;
-`
-
-const Rating = styled.Text`
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-`
-
-const SectionContainer = styled.View`
-  margin-vertical: 20px;
-`
-
-const SectionTitle = styled.Text`
-  color: white;
-  font-weight: 600;
-  padding-left: 20px;
-  margin-bottom: 15px;
-`
-
-const SectionScrollView = styled.ScrollView`
-  padding-left: 20px;
-`
-
-const ItemContainer = styled.View`
-  align-items: center;
-  margin-right: 20px;
-`
-
-const ItemTitle = styled.Text`
-  color: white;
-  font-size: ${({ big }) => (big ? '14px' : '12px')};
-  margin-vertical: 5px;
-`
-
-const HContainer = styled.View`
-  margin-bottom: 20px;
-  flex-direction: row;
-`
-
-const ItemColumn = styled.View`
-  margin-left: 20px;
-  width: 60%;
-`
-
-const ItemOverview = styled.Text`
-  color: #bdc3c7;
-  font-size: 12px;
-  margin-vertical: 10px;
-`
 
 class MovieScreen extends Component {
   state = {
@@ -161,7 +55,7 @@ class MovieScreen extends Component {
     return loading ? (
       <Loader />
     ) : (
-      <Container>
+      <ScrollView style={{ backgroundColor: 'black' }}>
         {nowPlaying && (
           <Swiper
             showsPagination={false}
@@ -180,30 +74,63 @@ class MovieScreen extends Component {
                   title,
                   poster_path
                 }) => (
-                  <View key={id}>
-                    <SlideContainer>
-                      <BgImage
+                  <View style={{ height: height / 3 }} key={id}>
+                    <View style={{ flex: 1, position: 'relative' }}>
+                      <Image
+                        style={{
+                          width,
+                          height: height / 3,
+                          opacity: 0.3,
+                          position: 'absolute'
+                        }}
                         source={{ uri: this.makePhotoUrl(backdrop_path) }}
                       />
-                      <Content>
-                        <PosterImage
-                          source={{ uri: this.makePhotoUrl(poster_path) }}
-                        />
-                        <Column>
-                          <Title>{title}</Title>
+                      <View
+                        style={{
+                          flex: 1,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingHorizontal: 30,
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Poster poster_path={poster_path} />
+                        <View
+                          style={{ width: '60%', alignItems: 'flex-start' }}
+                        >
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 14,
+                              fontWeight: '600'
+                            }}
+                          >
+                            {title}
+                          </Text>
                           {vote_average && (
-                            <VoteContainer>
-                              <Rating>⭐️ {`${vote_average} / 10`}</Rating>
-                            </VoteContainer>
+                            <View style={{ marginVertical: 10 }}>
+                              <Rating vote_average={vote_average} />
+                            </View>
                           )}
                           {overview && (
-                            <Overview>
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontSize: 12,
+                                marginBottom: 10
+                              }}
+                            >
                               {overview.length > 117
                                 ? `${overview.substring(0, 120)}...`
                                 : overview}
-                            </Overview>
+                            </Text>
                           )}
-                          <BtnContainer
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: '#e74c3c',
+                              borderRadius: 5,
+                              padding: 8
+                            }}
                             onPress={_ =>
                               navigation.navigate({
                                 routeName: 'Detail',
@@ -219,20 +146,31 @@ class MovieScreen extends Component {
                               })
                             }
                           >
-                            <BtnText>View details</BtnText>
-                          </BtnContainer>
-                        </Column>
-                      </Content>
-                    </SlideContainer>
+                            <Text style={{ color: 'white', fontSize: 12 }}>
+                              View details
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
                   </View>
                 )
               )}
           </Swiper>
         )}
         {upcoming && (
-          <SectionContainer>
-            <SectionTitle>Upcoming Movies</SectionTitle>
-            <SectionScrollView horizontal>
+          <View style={{ marginVertical: 20 }}>
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: '600',
+                paddingLeft: 20,
+                marginBottom: 15
+              }}
+            >
+              Upcoming Movies
+            </Text>
+            <ScrollView style={{ paddingLeft: 20 }} horizontal>
               {upcoming
                 .filter(movie => movie.poster_path)
                 .map(({ id, poster_path, title, vote_average }) => (
@@ -252,26 +190,39 @@ class MovieScreen extends Component {
                     }
                     key={id}
                   >
-                    <ItemContainer>
-                      <PosterImage
-                        source={{ uri: this.makePhotoUrl(poster_path) }}
-                      />
-                      <ItemTitle>
+                    <View style={{ alignItems: 'center', marginRight: 20 }}>
+                      <Poster poster_path={poster_path} />
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 12,
+                          marginVertical: 5
+                        }}
+                      >
                         {title.length > 15
                           ? `${title.substring(0, 12)}...`
                           : title}
-                      </ItemTitle>
-                      <Rating>⭐️ {`${vote_average} / 10`}</Rating>
-                    </ItemContainer>
+                      </Text>
+                      <Rating vote_average={vote_average} />
+                    </View>
                   </TouchableWithoutFeedback>
                 ))}
-            </SectionScrollView>
-          </SectionContainer>
+            </ScrollView>
+          </View>
         )}
         {popular && (
-          <SectionContainer>
-            <SectionTitle>Popular Movies</SectionTitle>
-            <SectionScrollView horizontal={false}>
+          <View style={{ marginVertical: 20 }}>
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: '600',
+                paddingLeft: 20,
+                marginBottom: 15
+              }}
+            >
+              Popular Movies
+            </Text>
+            <ScrollView style={{ paddingLeft: 20 }} horizontal={false}>
               {popular
                 .filter(movie => movie.poster_path)
                 .map(
@@ -300,29 +251,41 @@ class MovieScreen extends Component {
                       }
                       key={id}
                     >
-                      <HContainer>
-                        <PosterImage
-                          source={{ uri: this.makePhotoUrl(poster_path) }}
-                        />
-                        <ItemColumn>
-                          <ItemTitle big>{title}</ItemTitle>
-                          <Rating>⭐️ {`${vote_average} / 10`}</Rating>
+                      <View style={{ marginBottom: 20, flexDirection: 'row' }}>
+                        <Poster poster_path={poster_path} />
+                        <View style={{ marginLeft: 20, width: '60%' }}>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 14,
+                              marginVertical: 5
+                            }}
+                          >
+                            {title}
+                          </Text>
+                          <Rating vote_average={vote_average} />
                           {overview && (
-                            <ItemOverview>
+                            <Text
+                              style={{
+                                color: '#bdc3c7',
+                                fontSize: 12,
+                                marginVertical: 10
+                              }}
+                            >
                               {overview.length > 150
                                 ? `${overview.substring(0, 147)}...`
                                 : overview}
-                            </ItemOverview>
+                            </Text>
                           )}
-                        </ItemColumn>
-                      </HContainer>
+                        </View>
+                      </View>
                     </TouchableWithoutFeedback>
                   )
                 )}
-            </SectionScrollView>
-          </SectionContainer>
+            </ScrollView>
+          </View>
         )}
-      </Container>
+      </ScrollView>
     )
   }
 }
